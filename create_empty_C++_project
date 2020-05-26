@@ -1,0 +1,10 @@
+# Create a project directory
+# Create a src directory
+# Create an include directory
+# Make a main.cpp in the src directory
+
+mkdir ~/Development/C++_Code_Projects/$1
+mkdir ~/Development/C++_Code_Projects/$1/src
+mkdir ~/Development/C++_Code_Projects/$1/include
+nvim ~/Development/C++_Code_Projects/$1/src/main.cpp
+

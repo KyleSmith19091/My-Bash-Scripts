@@ -1,0 +1,14 @@
+clear
+
+cat << "EOF"
+    ==^==
+    |[[[|
+    |[[[|
+    '---'
+EOF
+
+
+rm -f ~/Downloads/*
+
+echo "Downloads folder emptied!"
+
