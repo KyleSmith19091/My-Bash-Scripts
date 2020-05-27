@@ -1,7 +1,37 @@
 # Run with standard compiler or makefile
 # Check if foo command exists on the system
 use_figlet=true
-command -v figlet >/dev/null 2>&1 || use_figlet=false
+! command -v figlet >/dev/null 2>&1 || use_figlet=false
+
+function check_first_install(){
+    if [ ! -d ~/.crun ]
+    then
+        echo "Creating crun directory"
+        mkdir ~/.crun
+        touch ~/.crun/crun_config.txt
+        echo "Installed=true" >> ~/.crun/crun_config.txt
+        cp run_c++.sh ~/.crun
+        rm -f ./run_c++.sh
+        if [ -f ~/.zshrc ]
+        then 
+            echo "alias crun=\"~/.crun/run_c++.sh\"" >> ~/.zshrc
+        elif [ -f ~/.bashrc ]
+        then 
+            echo "alias crun=\"~/.crun/run_c++.sh\"" >> ~/.bashrc
+        else 
+            echo "Could not add command to rc file please add this manually"
+        fi
+        echo "Install Successful!"
+        exit 0
+    fi
+}
+
+function uninstall(){
+    sudo -rf ~/.crun
+    echo "Cleared Settings Directory"
+    echo "Please remove command from .bashrc file"
+    exit 0
+}
 
 function create_makefile(){
     if [ use_figlet = true ]
@@ -78,6 +108,15 @@ else            # If there is no src directory then we are in the directory with
     ./main # Run the binary file
 fi
 }
+
+######################################################################################################################################
+
+check_first_install
+uninstall
+if [ "$1" = '-uuu' ]
+then 
+    uninstall
+fi    
 
 if [ "$1" = '-m' ]   
 then
