@@ -23,5 +23,16 @@ This script can
 2. Execute a C++ project with header files
 3. Execute a C++ project with library files
 
+### How would one install this?
+1. Download the run c++.sh file or the entire bash scripts folder
+```
+# If you want to do this from the terminal enter the following command
+$ git clone https://github.com/sKorpion19091/My-Bash-Scripts.git/run_c++.sh
+```
+The above command requires that the git command be installed and will install the directory in
+your home directory if run in that directory.
+
+2. Add the following to your bashrc script 
+
 
 
