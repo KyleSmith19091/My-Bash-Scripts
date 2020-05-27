@@ -13,6 +13,7 @@ as way to streamline and increase my productivity in the terminal
 
 ## Let's start off with C++
 This is a script that I wrote because I found it extremely irritating having to first run
+
     ```
     g++ -Wall -Werror -lsomelib myfile.cpp -o main 
     ./main
