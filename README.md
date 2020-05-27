@@ -33,7 +33,24 @@ $ git clone https://github.com/sKorpion19091/My-Bash-Scripts.git/run_c++.sh
 The above command requires that the git command be installed and will install the directory in
 your home directory if run in that directory.
 
-2. Add the following to your bashrc script 
+2. Open your terminal application of choice
+3. Change into the directory where the file was downloaded to
+```
+$ cd path/to/file
+```
+4. Then type in the following
+```
+$ chmod +x run_c++.sh
+```
+5. Followed by
+```
+$ ./run_c++.sh -install
+```
+6. All set!
+
+### How do I use it?
+- Makefile project
+
 
 
 
