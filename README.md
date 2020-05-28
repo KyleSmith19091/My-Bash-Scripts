@@ -70,6 +70,11 @@ Same thing
 ```
 $ crun
 ```
-
-
+- Creating a makefile
+The script allows for the creation of a basic makefile which can be done by running crun with the 
+makefile flag
+```
+$ crun -m name_of_file
+```
+This will create a basic makefile for a project with a single .cpp file in the current directory
 
