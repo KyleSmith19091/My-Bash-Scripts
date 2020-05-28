@@ -1,8 +1,9 @@
-# Run with standard compiler or makefile
-# Check if foo command exists on the system
-use_figlet=true
-! command -v figlet >/dev/null 2>&1 || use_figlet=false
+use_figlet=false
+! command -v figlet >/dev/null 2>&1 || use_figlet=true
+args1="$1" # Quick and dirty solution for some errors I have been having when providing args to the script
+args2="$2"
 
+# Install script that adds a config file and aliases the command to the user's rc file
 function check_first_install(){
     if [ ! -d ~/.crun ]
     then
@@ -26,6 +27,8 @@ function check_first_install(){
     fi
 }
 
+# Script to remove the hidden directory with script and config file
+# Two possible problems here: User moving the directory and not being able to remove the alias from the rc file
 function uninstall(){
     sudo -rf ~/.crun
     echo "Cleared Settings Directory"
@@ -33,6 +36,7 @@ function uninstall(){
     exit 0
 }
 
+# Create a basic makefile with for functions: run clean 
 function create_makefile(){
     if [ use_figlet = true ]
     then
@@ -40,20 +44,25 @@ function create_makefile(){
     else
         echo "Creating makefile!"
     fi
-    
-    word=$2
-    touch makefile
-    echo "$word: $word.o" >> makefile
-    echo "\tg++ -o $word $word.o" >> makefile
-    echo "$word.o: $word.cpp" >> makefile 
-    echo "\tg++ -c $word.cpp" >> makefile
-    echo "run:" >> makefile
-    echo "\t./$word" >> makefile
-    echo "clean:" >> makefile
-    echo "\trm *.o $word" >> makefile 
 
+    touch ./makefile
+    if [ -z "$args2" ]
+    then 
+        echo "Please enter a project name!"
+        exit 1
+    else
+        echo "$args2: $args2.o" >> ./makefile
+        echo "\tg++ -o $args2 $args2.o" >> ./makefile 
+        echo "$args2.o: $args2.cpp" >> ./makefile 
+        echo "\tg++ -c $args2.cpp" >> ./makefile
+        echo "run:" >> ./makefile
+        echo "\t./$args2" >> ./makefile
+        echo "clean:" >> ./makefile
+        echo "\trm *.o $args2" >> ./makefile
+    fi   
 }
 
+# Compile the project using the makefile method
 function run_makefile(){
  if [ use_figlet = true ]
     then  
@@ -69,6 +78,7 @@ function run_makefile(){
     make run   
 }
 
+# Run using g++ compiler with the appropriate flags
 function run_normal(){
 if [ use_figlet = true ]
 then     
@@ -111,20 +121,17 @@ fi
 
 ######################################################################################################################################
 
-if [ "$1" = '-install' ]
-then
-    check_first_install
-fi
 
-if [ "$1" = '-uuu' ]
+if [ "$1" = 'install' ]
 then 
-    uninstall
-fi    
-
-if [ "$1" = '-m' ]   
+    check_first_install
+elif [ "$1" = '-uuu' ]
 then
+    uninstall
+elif [ "$1" = '-m' ]
+then 
     create_makefile
-fi
+fi    
 
 if [ -f "makefile" ] # Check if user wants to use makefile for compilation
 then

@@ -50,7 +50,26 @@ $ ./run_c++.sh -install
 
 ### How do I use it?
 - Makefile project
+Change into the directory with the makefile and .cpp files, and simply run the following
+```
+$ crun
+```
+The script will pick up the presence of the makefile and use it for compiling and executing the 
+code
 
+- Typical 'header file project'
+Once again if you have a project with a src and include directory the command can be run from the 
+parent directory like this 
+```
+$ crun
+```
+This will link the approriate header files granted they have been correctly setup in the actual
+project
+- A project with a library that needs to be included
+Same thing
+```
+$ crun
+```
 
 
 
