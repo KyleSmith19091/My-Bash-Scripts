@@ -4,7 +4,7 @@ as way to streamline and increase my productivity in the terminal
 
 # What is there?
 - C++ Run command
-- Weather forcast script
+- Weather forecast script
 - Clear downloads folder script
 - A versatile script to quickly open config files
 - A script to create an empty C++ project and open my editor
@@ -13,7 +13,6 @@ as way to streamline and increase my productivity in the terminal
 
 ## Let's start off with C++
 This is a script that I wrote because I found it extremely irritating having to first run
-
     ```
     g++ -Wall -Werror -lsomelib myfile.cpp -o main 
     ./main
