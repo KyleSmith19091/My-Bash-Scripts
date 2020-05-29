@@ -1,5 +1,5 @@
 use_figlet=false
-! command -v figlet >/dev/null 2>&1 || use_figlet=true
+command -v figlet >/dev/null 2>&1 || (use_figlet=true)
 args1="$1" # Quick and dirty solution for some errors I have been having when providing args to the script
 args2="$2"
 
@@ -45,12 +45,12 @@ function create_makefile(){
         echo "Creating makefile!"
     fi
 
-    touch ./makefile
     if [ -z "$args2" ]
     then 
         echo "Please enter a project name!"
         exit 1
     else
+        touch ./makefile
         echo "$args2: $args2.o" >> ./makefile
         echo "\tg++ -o $args2 $args2.o" >> ./makefile 
         echo "$args2.o: $args2.cpp" >> ./makefile 
@@ -69,13 +69,22 @@ function run_makefile(){
         figlet "Make"
     else
         echo "Making Project"
-    fi    
-    if [ -f ".o" ] # Remove object files from current directory
+    fi   
+    objfiles=ls -1 *.o 2>/dev/null | wc -l
+    if [ "$objfiles" != 0 ] # Remove object files from current directory
     then 
         make clean
-    fi    
-    make
-    make run   
+    fi
+   
+    count=ls -1 *.cpp 2>/dev/null | wc -l
+
+    if [ "$count" != 0 ]
+    then     
+        make
+        make run
+    else
+        echo "No .cpp files found!"
+    fi
 }
 
 # Run using g++ compiler with the appropriate flags
@@ -119,10 +128,19 @@ else            # If there is no src directory then we are in the directory with
 fi
 }
 
+function create_tar_file_no_text_file(){
+    tar -cf "$args2".tar *.cpp makefile
+    exit 0
+}
+
+function create_tar_file_with_text_file(){
+    tar -cf "$args2".tar *.cpp makefile *.txt
+    exit 0
+}
+
 ######################################################################################################################################
-
-
-if [ "$1" = 'install' ]
+echo "$use_figlet"
+if [ "$1" = 'install' ] 
 then 
     check_first_install
 elif [ "$1" = '-uuu' ]
@@ -131,6 +149,12 @@ then
 elif [ "$1" = '-m' ]
 then 
     create_makefile
+elif [ "$1" = '-c' ]
+then 
+    create_tar_file_no_text_file
+elif [ "$1" = '-ct' ]
+then    
+    create_tar_file_with_text_file
 fi    
 
 if [ -f "makefile" ] # Check if user wants to use makefile for compilation
