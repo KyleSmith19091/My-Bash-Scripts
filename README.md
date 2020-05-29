@@ -22,15 +22,16 @@ This script can
 1. Run a simple makefile project
 2. Execute a C++ project with header files
 3. Execute a C++ project with library files
+4. Able to create a basic makefile for a single .cpp file project
 
 ### How would one install this?
 1. Download the run c++.sh file or the entire bash scripts folder
 ```
 # If you want to do this from the terminal enter the following command
-$ git clone https://github.com/sKorpion19091/My-Bash-Scripts.git/run_c++.sh
+$ git clone https://github.com/sKorpion19091/My-Bash-Scripts.git
 ```
 The above command requires that the git command be installed and will install the directory in
-your home directory if run in that directory.
+your home directory if run in that directory. 
 
 2. Open your terminal application of choice
 3. Change into the directory where the file was downloaded to
@@ -73,7 +74,7 @@ $ crun
 The script allows for the creation of a basic makefile which can be done by running crun with the 
 makefile flag
 ```
-$ crun -m name_of_file
+$ crun -m name_of_cpp_file
 ```
 This will create a basic makefile for a project with a single .cpp file in the current directory
 
