@@ -10,6 +10,7 @@ as a way to streamline and increase my productivity in the terminal
 - A script to create an empty C++ project and open my editor
 - Tmux Startup script for development
 - Tmux script to show off how cool my terminal looks
+- A script I run on the loading of my zsh file
 
 ## Let's start off with C++
 This is a script that I wrote because I found it extremely irritating having to first run
