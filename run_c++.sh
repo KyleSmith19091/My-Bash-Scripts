@@ -1,5 +1,5 @@
 use_figlet=false
-command -v figlet >/dev/null 2>&1 || (use_figlet=true)
+! command -v figlet >/dev/null 2>&1 || (use_figlet=true)
 args1="$1" # Quick and dirty solution for some errors I have been having when providing args to the script
 args2="$2"
 
@@ -112,7 +112,8 @@ then
     # Run the binary file
     ./a.out
 else            # If there is no src directory then we are in the directory with .cpp file
-    if [ ! -f "*.cpp" ]
+    count=ls -1 *.cpp 2>/dev/null | wc -l
+    if [ $count == 0 ]
     then 
         echo "No .cpp files found!"
         exit 1
@@ -129,17 +130,32 @@ fi
 }
 
 function create_tar_file_no_text_file(){
-    tar -cf "$args2".tar *.cpp makefile
+    count=ls -1 *.cpp 2>/dev/null | wc -l
+    
+    if [ $count != 0 ]
+    then 
+        tar -cf "$args2".tar *.cpp makefile 
+    else
+        echo "No .cpp files found to compress!"
+    fi    
+    
     exit 0
 }
 
 function create_tar_file_with_text_file(){
-    tar -cf "$args2".tar *.cpp makefile *.txt
+    count=ls -1 *.cpp 2>/dev/null | wc -l
+    
+    if [ $count != 0 ]
+    then 
+        tar -cf "$args2".tar *.cpp makefile *.txt
+    else
+        echo "No .cpp files found to compress!"
+    fi    
+
     exit 0
 }
 
 ######################################################################################################################################
-echo "$use_figlet"
 if [ "$1" = 'install' ] 
 then 
     check_first_install
@@ -155,11 +171,20 @@ then
 elif [ "$1" = '-ct' ]
 then    
     create_tar_file_with_text_file
+fi 
+
+presCount=ls -1 *.cpp 2>/dev/null | wc -l
+
+if [ "$presCount" != 0 ]
+then
+    if [ -f "makefile" ] # Check if user wants to use makefile for compilation
+    then   
+        run_makefile
+    else
+        run_normal    
+    fi
+else
+    echo "No .cpp files found!"
 fi    
 
-if [ -f "makefile" ] # Check if user wants to use makefile for compilation
-then
-   run_makefile
-else
-    run_normal    
-fi
+
