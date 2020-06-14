@@ -1,5 +1,5 @@
-use_figlet=false
-! command -v figlet >/dev/null 2>&1 || (use_figlet=true)
+use_figlet=true
+! command -v figlet >/dev/null 2>&1 || (use_figlet=false)
 args1="$1" # Quick and dirty solution for some errors I have been having when providing args to the script
 args2="$2"
 
@@ -38,7 +38,7 @@ function uninstall(){
 
 # Create a basic makefile with for functions: run clean 
 function create_makefile(){
-    if [ use_figlet = true ]
+    if [ "$use_figlet" = true ]
     then
         figlet "Creating makefile!"
     else
@@ -64,7 +64,7 @@ function create_makefile(){
 
 # Compile the project using the makefile method
 function run_makefile(){
- if [ use_figlet = true ]
+ if [ "$use_figlet" = true ]
     then  
         figlet "Make"
     else
@@ -73,36 +73,25 @@ function run_makefile(){
     objfiles=ls -1 *.o 2>/dev/null | wc -l
     if [ "$objfiles" != 0 ] # Remove object files from current directory
     then 
-        make clean
+        make clean &>/dev/null
+        echo "Cleaning Object Files!"
     fi
    
-    count=ls -1 *.cpp 2>/dev/null | wc -l
-
-    if [ "$count" != 0 ]
-    then     
-        make
-        make run
-    else
-        echo "No .cpp files found!"
-    fi
+    make
+    make run
 }
 
 # Run using g++ compiler with the appropriate flags
 function run_normal(){
-if [ use_figlet = true ]
+if [ "$use_figlet" = true ]
 then     
     figlet "Run G++" # Prompt user
 else
     echo "Run G++"
 fi    
-if [ -d "./src" ] # Check if src directory exists
+if [ -d ./src ] # Check if src directory exists
 then
-    if [ -f "./src/*.cpp " ] 
-    then 
-        echo "No .cpp files found!"
-        exit 1 
-    fi    
-
+        
     # Remove object file stuff from include directory
     rm -f ./include/*.hpp.gch
 
@@ -113,7 +102,7 @@ then
     ./a.out
 else            # If there is no src directory then we are in the directory with .cpp file
     count=ls -1 *.cpp 2>/dev/null | wc -l
-    if [ $count == 0 ]
+    if [ "$count" == 0 ]
     then 
         echo "No .cpp files found!"
         exit 1
@@ -129,10 +118,88 @@ else            # If there is no src directory then we are in the directory with
 fi
 }
 
-function create_tar_file_no_text_file(){
-    count=ls -1 *.cpp 2>/dev/null | wc -l
+function setup_project(){
+
+    if [ -d ./src/ ]
+    then 
+        echo "I have detected a source directory!"
+        src=$(pwd)/src   # Save the path to the source directory 
+    else
+        echo "No source directory"
+        subdircount=`find ./ -maxdepth 1 -type d | wc -l`
+        if [ $subdircount -gt 2 ]
+        then
+            echo "I do detect the following child directories"
+            ls -d */
+            echo "Do you wish to set any of the above directories as the src directory?"
+            read -p "> " src
+            src=${src}
+            found=`find "$src" -maxdepth 1 -type d 2>/dev/null | wc -l`
+            if [ "$found" != 0 ]
+            then
+                echo "Found the directory!"
+            else
+                echo "Directory Not Found!"
+                exit 1
+            fi    
+        else
+            exit 1
+        fi    
+    fi    
     
-    if [ $count != 0 ]
+    if [ -d ./include/ ]
+    then
+        echo "I have detected an include directory"
+        echo "Project Setup Completed"
+        echo "Please run again to execute" 
+        include=$(pwd)/include  # Save the path to the source directory
+        exit 0
+        echo "EXIT"
+    else
+        echo "No include directory detected"
+        subdircount=`find ./ -maxdepth 1 -type d | wc -l`
+        if [ $subdircount -gt 2 ]
+        then
+            echo "Set the one of the below directories as the include directory?"
+            ls -d */
+            read -p "> " include
+            include=${include}
+            found=`find "$include" -maxdepth 1 -type d 2>/dev/null | wc -l`
+            if [ "$found" != 0 ]
+            then
+                echo "Found the specified directory!"
+                echo "Project Setup Completed!"
+            else
+                echo "Directory Not Found!"
+            fi    
+
+        fi    
+        exit 1
+    fi
+}
+
+function run_project(){
+   
+    if [ "$figlet" = true ]
+    then
+        figlet "Project Run"
+    else
+        echo "Project Run"
+    fi
+    
+    g++ -Wall -Werror -I ./include/ ./src/*.cpp 
+
+    ./a.out
+        
+}
+
+
+
+
+function create_tar_file_no_text_file(){
+    count=ls -1 ./*.cpp 2>/dev/null | wc -l
+    
+    if [ "$count" != 0 ]
     then 
         tar -cf "$args2".tar *.cpp makefile 
     else
@@ -144,14 +211,7 @@ function create_tar_file_no_text_file(){
 
 function create_tar_file_with_text_file(){
     count=ls -1 *.cpp 2>/dev/null | wc -l
-    
-    if [ $count != 0 ]
-    then 
-        tar -cf "$args2".tar *.cpp makefile *.txt
-    else
-        echo "No .cpp files found to compress!"
-    fi    
-
+    tar -cf "$args2".tar *.cpp makefile *.txt
     exit 0
 }
 
@@ -171,11 +231,14 @@ then
 elif [ "$1" = '-ct' ]
 then    
     create_tar_file_with_text_file
+elif [ "$1" = '-p' ]
+then
+    setup_project
 fi 
 
-presCount=ls -1 *.cpp 2>/dev/null | wc -l
+count=`ls -1 *.cpp 2>/dev/null | wc -l`
 
-if [ "$presCount" != 0 ]
+if [ $count != 0 ]
 then
     if [ -f "makefile" ] # Check if user wants to use makefile for compilation
     then   
@@ -183,7 +246,9 @@ then
     else
         run_normal    
     fi
-else
+elif [ $count == 0 ]
+then 
+    run_project
     echo "No .cpp files found!"
 fi    
 
