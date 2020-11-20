@@ -8,7 +8,7 @@ tmux split-window -h
 
 tmux split-window -v
 
-tmux send-keys -t 2 "Ranger" Enter
+tmux send-keys -t 2 "cmatrix" Enter
 
 tmux send-keys -t 3 "gotop" Enter
 

@@ -187,7 +187,7 @@ function run_project(){
         echo "Project Run"
     fi
     
-    g++ -Wall -Werror -I ./include/ ./src/*.cpp 
+    g++ -std=c++17 -Wall -Werror -I ./include/ ./src/*.cpp 
 
     ./a.out
         
@@ -249,7 +249,6 @@ then
 elif [ $count == 0 ]
 then 
     run_project
-    echo "No .cpp files found!"
 fi    
 
 

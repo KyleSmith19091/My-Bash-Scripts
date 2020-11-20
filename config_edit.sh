@@ -27,7 +27,16 @@ then
     nvim ~/.config/nvim/init.vim 
 elif [ $1 = 'config' ]
 then 
-    echo "cd /Users/kylesmith/.config" 
+    echo "cd /Users/kylesmith/.config"
+elif [ $1 = 'alacritty' ]
+then 
+    nvim ~/.config/alacritty/alacritty.yml
+elif [ $1 = 'kitty' ]
+then
+    nvim ~/.config/kitty/kitty.conf
+elif [ $1 = 'hammerspoon' ] 
+then
+    nvim ~/.hammerspoon/init.lua
 else
    echo "Please enter valid config file name" 
 fi    

@@ -5,8 +5,6 @@ clear
 read -p "Location > " loc
 loc=${loc:-location}
 
-
-
 figlet "$loc"
 
-curl wttr.in/"$loc"
+curl wttr.in/"$loc" -0
